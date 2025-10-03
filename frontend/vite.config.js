@@ -6,12 +6,18 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000,
+    host: '0.0.0.0', // Allow external connections
+    port: process.env.PORT || 3000, // Use environment PORT or fallback to 3000
     proxy: {
       '/api': {
-        target: 'http://localhost:4000',
+        target: process.env.VITE_API_URL || 'http://localhost:4000',
         changeOrigin: true,
       },
     }
   },
+  preview: {
+    host: '0.0.0.0', // Also set for preview mode
+    port: process.env.PORT || 3000,
+    allowedHosts: ['group4-cm3.onrender.com', '.onrender.com'], // Allow Render.com hosts
+  }
 })
