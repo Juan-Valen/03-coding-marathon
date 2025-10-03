@@ -59,27 +59,31 @@ const JobPage = ({ isAuthenticated }) => {
                 <p>{error}</p>
             ) : (
                 <>
-                    <h2>{job.title}</h2>
-                    <p>Type: {job.type}</p>
-                    <p>Description: {job.description}</p>
+                    <div>
+                        <h2>{job.title}</h2>
+                        <p className={job.status}>{job.status}</p>
+                        <p>{job.type}</p>
+                        <p>Deadline: {job.applicationDeadline}</p>
+                        <p>Posted: {job.postedDate}</p>
+                    </div>
+                    <div>
+                        <p>Email: {job.company.contactEmail}</p>
+                        <p>Phone: {job.company.contactPhone}</p>
+                        <p>Website: {job.company.website}</p>
+                        <p>Size: {job.company.size}</p>
+                        <p>Location: {job.location}</p>
+                    </div>
                     <p>Company: {job.company.name}</p>
-                    <p>Email: {job.company.contactEmail}</p>
-                    <p>Phone: {job.company.contactPhone}</p>
-                    <p>website: {job.company.website}</p>
-                    <p>size: {job.company.size}</p>
-                    <p>location: {job.location}</p>
-                    <p>salary: {job.salary}</p>
-                    <p>experienceLevel: {job.experienceLevel}</p>
-                    <p>status: {job.status}</p>
-                    <p>applicationDeadline: {job.applicationDeadline}</p>
-                    <p>requirements: {job.requirements}</p>
-                    <p>postedDate: {job.postedDate}</p>
-                    {isAuthenticated &&
-                        <>
-                            <button onClick={() => onDeleteClick(job._id)}>delete</button>
-                            <button onClick={() => navigate(`/edit-job/${job._id}`)}>edit</button>
-                        </>
-                    }
+                    <p>Salary: {job.salary}</p>
+                    <p>Experience Level: {job.experienceLevel}</p>
+                    <p>Requirements:
+                        {job.requirements.length === 0 && <p></p>}
+                        {job.requirements.length !== 0 &&
+                            job.requirements.map(req => req + "   ")}
+                    </p>
+                    <p>Description: {job.description}</p>
+                    <button onClick={() => onDeleteClick(job._id)}>delete</button>
+                    <button onClick={() => navigate(`/edit-job/${job._id}`)}>edit</button>
 
                 </>
             )}

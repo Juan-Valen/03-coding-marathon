@@ -48,6 +48,19 @@ const AddJobPage = () => {
         setForm((prev) => ({ ...prev, [id]: value }));
     };
 
+    const handleRequirement = (e) => {
+        const { name, value } = e.target;
+        setForm((prev) => ({ ...prev, ["requirements"]: [...prev.requirements.map((r, i) => i != name ? r : value)] }));
+    };
+
+    const handleAddRequirement = (e) => {
+        setForm((prev) => ({ ...prev, ["requirements"]: [...prev.requirements, ""] }));
+    };
+
+    const handleDeleteRequirement = (index, e) => {
+        setForm((prev) => ({ ...prev, ["requirements"]: [...prev.requirements.filter((_, i) => i != index)] }));
+    };
+
     return (
         <div className="create">
             <h2>Add a New Job</h2>
@@ -58,7 +71,7 @@ const AddJobPage = () => {
                     type="text"
                     required
                     value={form.title}
-                    onChange={handleChange}/>
+                    onChange={handleChange} />
                 <label>Job type:</label>
                 <select
                     id="type"
@@ -81,41 +94,41 @@ const AddJobPage = () => {
                     type="text"
                     required
                     value={form.companyName}
-                    onChange={handleChange}/>
+                    onChange={handleChange} />
                 <label>Contact Email:</label>
                 <input
                     id="contactEmail"
                     type="text"
                     required
                     value={form.contactEmail}
-                    onChange={handleChange}/>
+                    onChange={handleChange} />
                 <label>Contact Phone:</label>
                 <input
                     id="contactPhone"
                     type="text"
                     required
                     value={form.contactPhone}
-                    onChange={handleChange}/>
+                    onChange={handleChange} />
                 <label>Website:</label>
                 <input
                     type="text"
                     id="website" value={form.website}
-                    onChange={handleChange}/>
+                    onChange={handleChange} />
                 <label>Size:</label>
                 <input
                     type="number"
                     id="size" value={form.size}
-                    onChange={handleChange}/>
+                    onChange={handleChange} />
                 <label>Location:</label>
                 <input
                     type="text"
                     id="location" value={form.location}
-                    onChange={handleChange}/>
+                    onChange={handleChange} />
                 <label>Salary:</label>
                 <input
                     type="text"
                     id="salary" value={form.salary}
-                    onChange={handleChange}/>
+                    onChange={handleChange} />
                 <label>experienceLevel:</label>
                 <select
                     id="experienceLevel" value={form.experienceLevel}
@@ -137,12 +150,21 @@ const AddJobPage = () => {
                 <input
                     type="date"
                     id="applicationDeadline" value={form.applicationDeadline}
-                    onChange={handleChange}/>
-                <label>requirements:</label>
-                <input
-                    type="text"
-                    id="requirements" value={form.requirements}
                     onChange={handleChange} />
+                <label>requirements:</label>
+                <div className="req-list">
+                    {form.requirements.length === 0 && <p></p>}
+                    {form.requirements.length !== 0 &&
+                        form.requirements.map((reqt, index) =>
+                            <div className="req-item" key={"requirements " + reqt.index}>
+                                <input name={index} type="text" required
+                                    value={reqt}
+                                    onChange={handleRequirement}/>
+                                <button type="button" onClick={(e) => handleDeleteRequirement(index, e)}>delete</button>
+                            </div>
+                        )}
+                    <button onClick={handleAddRequirement} type="button">add requirement</button>
+                </div>
                 <button>Add Job</button>
             </form>
         </div>
