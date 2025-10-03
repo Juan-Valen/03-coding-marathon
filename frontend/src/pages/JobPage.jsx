@@ -7,10 +7,11 @@ const JobPage = ({ isAuthenticated }) => {
     const [job, setJob] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const website = import.meta.env.VITE_API_URL || "";
 
     const deleteJob = async (id) => {
         try {
-            const res = await fetch(`/api/jobs/${id}`, {
+            const res = await fetch(`${website}/api/jobs/${id}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${JSON.parse(localStorage.getItem("user")).token}`
@@ -28,7 +29,7 @@ const JobPage = ({ isAuthenticated }) => {
         const fetchJob = async () => {
             try {
                 console.log("id: ", id);
-                const res = await fetch(`/api/jobs/${id}`);
+                const res = await fetch(`${website}/api/jobs/${id}`);
                 if (!res.ok) {
                     throw new Error("Network response was not ok");
                 }
@@ -85,8 +86,12 @@ const JobPage = ({ isAuthenticated }) => {
                             job.requirements.map(req => req + "   ")}
                     </p>
                     <p>Description: {job.description}</p>
-                    <button onClick={() => onDeleteClick(job._id)}>delete</button>
-                    <button onClick={() => navigate(`/edit-job/${job._id}`)}>edit</button>
+                    {isAuthenticated &&
+                        <>
+                            <button onClick={() => onDeleteClick(job._id)}>delete</button>
+                            <button onClick={() => navigate(`/edit-job/${job._id}`)}>edit</button>
+                        </>
+                    }
 
                 </>
             )}

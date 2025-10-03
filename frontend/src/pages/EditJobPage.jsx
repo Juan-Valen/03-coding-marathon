@@ -7,6 +7,7 @@ const EditJobPage = () => {
     const [error, setError] = useState(null);
     const { id } = useParams();
     const [form, setForm] = useState({ title: "", type: "", description: "", companyName: "", contactPhone: "", contactEmail: "", website: "", size: 0, location: "", salary: 0, experienceLevel: "", postedDate: "", status: "", applicationDeadline: "", requirements: [] })
+    const website = import.meta.env.VITE_API_URL || "";
 
     const handleChange = (e) => {
         const { id, value } = e.target;
@@ -30,15 +31,13 @@ const EditJobPage = () => {
 
     const updateJob = async (job) => {
         try {
-            const res = await fetch(`/api/jobs/${job.id}`, {
+            const res = await fetch(`${website}/api/jobs/${job.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${JSON.parse(localStorage.getItem("user")).token}`
                 },
                 body: JSON.stringify(job),
-                headers: {
-                    Authorization: `Bearer ${JSON.parse(localStorage.getItem("user")).token}`
-                }
             });
             if (!res.ok) throw new Error("Failed to update job");
             return res.ok;
@@ -51,7 +50,7 @@ const EditJobPage = () => {
     useEffect(() => {
         const fetchJob = async () => {
             try {
-                const res = await fetch(`/api/jobs/${id}`);
+                const res = await fetch(`${website}/api/jobs/${id}`);
                 if (!res.ok) {
                     throw new Error("Network response was not ok");
                 }
@@ -182,14 +181,14 @@ const EditJobPage = () => {
                     <label>applicationDeadline:</label>
                     <input
                         type="date"
-                        id="applicationDeadline" value={form.applicationDeadline}
+                        id="applicationDeadline" value={new Date(form.applicationDeadline).toISOString().split('T')[0]}
                         onChange={handleChange} />
                     <label>requirements:</label>
                     <div className="req-list">
                         {form.requirements.length === 0 && <p></p>}
                         {form.requirements.length !== 0 &&
                             form.requirements.map((reqt, index) =>
-                                <div className="req-item" key={"requirements " + reqt.index}>
+                                <div className="req-item" key={"requirements " + index}>
                                     <input name={index} type="text" required
                                         value={reqt}
                                         onChange={handleRequirement} />

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Signup = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
   const name = useField("text");  
-  const email = useField("email");
+  const username = useField("text");
   const password = useField("password");
   const phoneNumber = useField("text");
   const gender = useField("text");
@@ -19,7 +19,7 @@ const Signup = ({ setIsAuthenticated }) => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     await signup({
-      username: email.value,
+      username: username.value,
       password: password.value,
       name: name.value,
       phone_number: phoneNumber.value,
@@ -42,7 +42,7 @@ const Signup = ({ setIsAuthenticated }) => {
         <label>Name:</label>
         <input {...name} />
         <label>Username:</label>
-        <input {...email} />
+        <input {...username} />
         <label>Password:</label>
         <input {...password} />
         <label>Phone Number:</label>
