@@ -2,7 +2,7 @@ import useField from "../hooks/useField";
 import useSignup from "../hooks/useSignup";
 import { useNavigate } from "react-router-dom";
 
-const Signup = () => {
+const Signup = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
   const name = useField("text");  
   const email = useField("email");
@@ -11,8 +11,10 @@ const Signup = () => {
   const gender = useField("text");
   const dateOfBirth = useField("date");
   const membershipStatus = useField("text");
+  const address = useField("text");
+  const profile_picture = useField("text");
 
-  const { signup, error } = useSignup("/api/users/signup");
+  const { signup, error } = useSignup(setIsAuthenticated);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -24,6 +26,8 @@ const Signup = () => {
       gender: gender.value,
       date_of_birth: dateOfBirth.value,
       membership_status: membershipStatus.value,
+      address: address.value,
+      profile_picture: profile_picture.value
     });
     if (!error) {
       console.log("success");
@@ -49,6 +53,11 @@ const Signup = () => {
         <input {...dateOfBirth} />
         <label>Membership Status:</label>
         <input {...membershipStatus} />
+        <label>Address:</label>
+        <input {...address} />
+        <label>Profile Picture URL:</label>
+        <input {...profile_picture} />
+        {error && <div className="error">{error}</div>}
         <button>Sign up</button>
       </form>
     </div>
