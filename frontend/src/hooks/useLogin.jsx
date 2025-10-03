@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 export default function useLogin(setIsAuthenticated) {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
-  const website = process.env.API_URL;
+  const website = import.meta.env.VITE_API_URL || "http://localhost:3000";
   const url = "/api/users/login";
   const navigate = useNavigate();
 
@@ -16,6 +16,7 @@ export default function useLogin(setIsAuthenticated) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(object),
     });
+    console.log(website + url);
     const user = await response.json();
 
     if (!response.ok) {
