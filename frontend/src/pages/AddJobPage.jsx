@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 const AddJobPage = () => {
     const [form, setForm] = useState({ title: "", type: "", description: "", companyName: "", contactPhone: "", contactEmail: "", website: "", size: 0, location: "", salary: 0, experienceLevel: "", postedDate: "", status: "", applicationDeadline: "", requirements: [] })
     const navigate = useNavigate();
+    const website = import.meta.env.VITE_API_URL || "";
     async function addJob() {
 
         const postData = {
@@ -18,7 +19,7 @@ const AddJobPage = () => {
         }
 
         try {
-            const res = await fetch("/api/jobs", {
+            const res = await fetch(`${website}/api/jobs`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(postData)
@@ -159,7 +160,7 @@ const AddJobPage = () => {
                             <div className="req-item" key={"requirements " + reqt.index}>
                                 <input name={index} type="text" required
                                     value={reqt}
-                                    onChange={handleRequirement}/>
+                                    onChange={handleRequirement} />
                                 <button type="button" onClick={(e) => handleDeleteRequirement(index, e)}>delete</button>
                             </div>
                         )}
