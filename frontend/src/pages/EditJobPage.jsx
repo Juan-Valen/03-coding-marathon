@@ -50,7 +50,7 @@ const EditJobPage = () => {
     useEffect(() => {
         const fetchJob = async () => {
             try {
-                const res = await fetch(`/api/jobs/${id}`);
+                const res = await fetch(`${website}/api/jobs/${id}`);
                 if (!res.ok) {
                     throw new Error("Network response was not ok");
                 }
