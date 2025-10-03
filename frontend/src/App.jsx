@@ -17,7 +17,7 @@ const App = () => {
     );
 
     // Sync authentication state with localStorage changes
-    useEffect(() => {
+    useEffect(() => { 
         const checkAuth = () => {
             const userExists = !!localStorage.getItem("user");
             if (userExists !== isAuthenticated) {
