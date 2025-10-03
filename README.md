@@ -1,5 +1,11 @@
 # Usage
- 
+
+## CONTRIBUTIONS
+- Juan: frontend jobs, render.com frontend, and fixes/merges.
+- Eemeli: Backend auth, render.com backend and auth test.
+- Amir: Backend jobs enpoints and jobs testing with and without auth.
+- Nooa: Frontend authentication, frontend authorization, and vite ENV. 
+
 ### Part 1
 
 1. **Install Backend Dependencies**  
