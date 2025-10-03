@@ -157,7 +157,7 @@ const AddJobPage = () => {
                     {form.requirements.length === 0 && <p></p>}
                     {form.requirements.length !== 0 &&
                         form.requirements.map((reqt, index) =>
-                            <div className="req-item" key={"requirements " + reqt.index}>
+                            <div className="req-item" key={"requirements " + index}>
                                 <input name={index} type="text" required
                                     value={reqt}
                                     onChange={handleRequirement} />
