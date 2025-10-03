@@ -18,5 +18,6 @@ export default defineConfig({
   preview: {
     host: '0.0.0.0', // Also set for preview mode
     port: process.env.PORT || 3000,
+    allowedHosts: ['group4-cm3.onrender.com', '.onrender.com'], // Allow Render.com hosts
   }
 })
