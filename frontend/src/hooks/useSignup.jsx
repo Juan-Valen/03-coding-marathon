@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function useSignup(url) {
+export default function useSignup(setIsAuthenticated) {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
+  const url = "/api/users/signup";
+  const navigate = useNavigate();
 
   const signup = async (object) => {
     setIsLoading(true);
@@ -23,6 +26,8 @@ export default function useSignup(url) {
 
     localStorage.setItem("user", JSON.stringify(user));
     setIsLoading(false);
+    setIsAuthenticated(true);
+    navigate("/");
   };
 
   return { signup, isLoading, error };
