@@ -7,6 +7,7 @@ const EditJobPage = () => {
     const [error, setError] = useState(null);
     const { id } = useParams();
     const [form, setForm] = useState({ title: "", type: "", description: "", companyName: "", contactPhone: "", contactEmail: "", website: "", size: 0, location: "", salary: 0, experienceLevel: "", postedDate: "", status: "", applicationDeadline: "", requirements: [] })
+    const website = import.meta.env.VITE_API_URL || "";
 
     const handleChange = (e) => {
         const { id, value } = e.target;
@@ -30,7 +31,7 @@ const EditJobPage = () => {
 
     const updateJob = async (job) => {
         try {
-            const res = await fetch(`/api/jobs/${job.id}`, {
+            const res = await fetch(`${website}/api/jobs/${job.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
