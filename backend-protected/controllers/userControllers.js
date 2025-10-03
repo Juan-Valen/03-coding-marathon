@@ -15,32 +15,27 @@ const generateToken = (_id) => {
 const signupUser = async (req, res) => {
   const {
     name,
-    email,
+    username,
     password,
     phone_number,
     gender,
     date_of_birth,
     membership_status,
+    bio,
+    address,
+    profile_picture,
   } = req.body;
-  try {
-    if (
-      !name ||
-      !email ||
-      !password ||
-      !phone_number ||
-      !gender ||
-      !date_of_birth ||
-      !membership_status
-    ) {
-      res.status(400);
-      throw new Error("Please add all fields");
-    }
-    // Check if user exists
-    const userExists = await User.findOne({ email });
 
+  try {
+    // Check required fields
+    if (!name || !username || !password || !phone_number || !gender || !date_of_birth || !membership_status || !address) {
+      return res.status(400).json({ error: "Please add all required fields" });
+    }
+
+    // Check if username exists
+    const userExists = await User.findOne({ username });
     if (userExists) {
-      res.status(400);
-      throw new Error("User already exists");
+      return res.status(400).json({ error: "Username already taken" });
     }
 
     // Hash password
@@ -50,56 +45,76 @@ const signupUser = async (req, res) => {
     // Create user
     const user = await User.create({
       name,
-      email,
+      username,
       password: hashedPassword,
       phone_number,
       gender,
       date_of_birth,
       membership_status,
+      bio,
+      address,
+      profile_picture,
     });
 
     if (user) {
-      // console.log(user._id);
-     const token = generateToken(user._id);
-      res.status(201).json({ email, token });
+      const token = generateToken(user._id);
+      res.status(201).json({
+        _id: user._id,
+        username: user.username,
+        name: user.name,
+        membership_status: user.membership_status,
+        token,
+      });
     } else {
-      res.status(400);
-      throw new Error("Invalid user data");
+      res.status(400).json({ error: "Invalid user data" });
     }
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
-// @desc    Authenticate a user
+// @desc    Authenticate user (login)
 // @route   POST /api/users/login
 // @access  Public
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
+
   try {
-    // Check for user email
-    const user = await User.findOne({ email });
+    // Check if user exists
+    const user = await User.findOne({ username });
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = generateToken(user._id);
-      res.status(200).json({ email, token });
+      res.status(200).json({
+        _id: user._id,
+        username: user.username,
+        name: user.name,
+        membership_status: user.membership_status,
+        token,
+      });
     } else {
-      res.status(400);
-      throw new Error("Invalid credentials");
+      res.status(400).json({ error: "Invalid credentials" });
     }
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
-// @desc    Get user data
+// @desc    Get current user profile
 // @route   GET /api/users/me
 // @access  Private
 const getMe = async (req, res) => {
   try {
-    res.status(200).json(req.user);
+    // req.user comes from auth middleware (decoded JWT)
+    const user = await User.findById(req.user._id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json(user);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
