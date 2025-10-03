@@ -10,12 +10,14 @@ import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : false
+  );
 
     return (
       <div className="App">
         <BrowserRouter>
-          <Navbar />
+          <Navbar setIsAuthenticated={setIsAuthenticated} isAuthenticated={isAuthenticated} />
           <div className="content">
             <Routes>
               <Route path="/" element={<Home />} />
