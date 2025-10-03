@@ -56,7 +56,23 @@ const EditJobPage = () => {
                 const data = await res.json();
 
                 // Initialize form fields with fetched job data
-                setForm({ title: data.title, type: data.type, description: data.description, companyName: data.company.name, contactEmail: data.company.contactEmail, contactPhone: data.company.contactPhone, website: data.company.website, size: data.company.size, location: data.localtion, salary: data.salary, experienceLevel: data.experienceLevel, postedDate: Date.parse(data.postedDate), status: data.status, applicationDeadline: data.applicationDeadline, requirements: data.requirements })
+                setForm({ 
+                    title: data.title || "", 
+                    type: data.type || "", 
+                    description: data.description || "", 
+                    companyName: data.company?.name || "", 
+                    contactEmail: data.company?.contactEmail || "", 
+                    contactPhone: data.company?.contactPhone || "", 
+                    website: data.company?.website || "", 
+                    size: data.company?.size || 0, 
+                    location: data.location || "",  // Fixed typo: was 'localtion'
+                    salary: data.salary || 0, 
+                    experienceLevel: data.experienceLevel || "", 
+                    postedDate: data.postedDate || "", 
+                    status: data.status || "", 
+                    applicationDeadline: data.applicationDeadline || "", 
+                    requirements: data.requirements || [] 
+                })
             } catch (error) {
                 console.error("Failed to fetch job:", error);
                 setError(error.message);

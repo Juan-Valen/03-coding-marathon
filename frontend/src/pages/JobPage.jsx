@@ -17,8 +17,10 @@ const JobPage = ({ isAuthenticated }) => {
             if (!res.ok) {
                 throw new Error("Failed to delete job");
             }
+            return true;
         } catch (error) {
             console.error("Error deleting job:", error);
+            throw error; // Re-throw the error so onDeleteClick can catch it
         }
     };
 
@@ -42,14 +44,19 @@ const JobPage = ({ isAuthenticated }) => {
         fetchJob();
     }, [id]);
 
-    const onDeleteClick = (jobId) => {
+    const onDeleteClick = async (jobId) => {
         const confirm = window.confirm(
             "Are you sure you want to delete this listing?" + jobId
         );
         if (!confirm) return;
 
-        deleteJob(jobId);
-        navigate("/");
+        try {
+            await deleteJob(jobId);
+            console.log("Job deleted successfully");
+            navigate("/");
+        } catch (error) {
+            console.error("Failed to delete job:", error);
+        }
     };
 
     return (
@@ -77,11 +84,17 @@ const JobPage = ({ isAuthenticated }) => {
                     <p>Company: {job.company.name}</p>
                     <p>Salary: {job.salary}</p>
                     <p>Experience Level: {job.experienceLevel}</p>
-                    <p>Requirements:
-                        {job.requirements.length === 0 && <p></p>}
+                    <div>
+                        <p><strong>Requirements:</strong></p>
+                        {job.requirements.length === 0 && <p>No specific requirements listed</p>}
                         {job.requirements.length !== 0 &&
-                            job.requirements.map(req => req + "   ")}
-                    </p>
+                            <ul>
+                                {job.requirements.map((req, index) => (
+                                    <li key={index}>{req}</li>
+                                ))}
+                            </ul>
+                        }
+                    </div>
                     <p>Description: {job.description}</p>
                     <button onClick={() => onDeleteClick(job._id)}>delete</button>
                     <button onClick={() => navigate(`/edit-job/${job._id}`)}>edit</button>

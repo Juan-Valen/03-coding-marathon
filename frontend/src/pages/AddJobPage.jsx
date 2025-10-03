@@ -2,13 +2,21 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const AddJobPage = () => {
-    const [form, setForm] = useState({ title: "", type: "", description: "", companyName: "", contactPhone: "", contactEmail: "", website: "", size: 0, location: "", salary: 0, experienceLevel: "", postedDate: "", status: "", applicationDeadline: "", requirements: [] })
+    const [form, setForm] = useState({ title: "", type: "Full-Time", description: "", companyName: "", contactPhone: "", contactEmail: "", website: "", size: 0, location: "", salary: 0, experienceLevel: "Entry", postedDate: "", status: "open", applicationDeadline: "", requirements: [] })
     const navigate = useNavigate();
     const website = import.meta.env.VITE_API_URL || "";
     async function addJob() {
 
         const postData = {
-            ...form,
+            title: form.title,
+            type: form.type,
+            description: form.description,
+            location: form.location,
+            salary: form.salary,
+            experienceLevel: form.experienceLevel,
+            status: form.status,
+            applicationDeadline: form.applicationDeadline,
+            requirements: form.requirements,
             company: {
                 name: form.companyName,
                 contactEmail: form.contactEmail,
@@ -19,6 +27,7 @@ const AddJobPage = () => {
         }
 
         try {
+            console.log("Sending job data:", postData);
             const res = await fetch(`${website}/api/jobs`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -29,8 +38,9 @@ const AddJobPage = () => {
                 console.log("Job added successfully!");
                 navigate("/")
             } else {
-                console.error("POST FAILED!");
-
+                const errorData = await res.text();
+                console.error("POST FAILED! Status:", res.status);
+                console.error("Error response:", errorData);
             }
         } catch (error) {
             console.error("catch error:", error);
