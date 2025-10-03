@@ -20,16 +20,17 @@ export default function useSignup(setIsAuthenticated) {
     const user = await response.json();
 
     if (!response.ok) {
-      console.log(user.error);
+      console.log("Signup error:", user.error);
       setError(user.error);
       setIsLoading(false);
-      return error;
+      return false; // Return false for failure
     }
 
     localStorage.setItem("user", JSON.stringify(user));
     setIsLoading(false);
     setIsAuthenticated(true);
     navigate("/");
+    return true; // Return true for success
   };
 
   return { signup, isLoading, error };
