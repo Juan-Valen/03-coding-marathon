@@ -2,9 +2,9 @@ import JobListings from "../components/JobListings";
 
 const Home = () => {
   return (
-    <div className="home">
+    <main className="home content">
       <JobListings  />
-    </div>
+    </main>
   );
 };
 

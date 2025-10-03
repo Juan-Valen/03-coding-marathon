@@ -1,12 +1,60 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const AddJobPage = () => {
+const EditJobPage = () => {
+    const { id } = useParams();
     const [form, setForm] = useState({ title: "", type: "", description: "", companyName: "", contactPhone: "", contactEmail: "", website: "", size: 0, location: "", salary: 0, experienceLevel: "", postedDate: "", status: "", applicationDeadline: "", requirements: [] })
-    const navigate = useNavigate();
-    async function addJob() {
 
-        const postData = {
+    const handleChange = (e) => {
+        const { id, value } = e.target;
+        setForm((prev) => ({ ...prev, [id]: value }));
+    };
+
+    const navigate = useNavigate();
+
+    const updateJob = async (job) => {
+        try {
+            const res = await fetch(`/api/jobs/${job.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(job),
+            });
+            if (!res.ok) throw new Error("Failed to update job");
+            return res.ok;
+        } catch (error) {
+            console.error("Error updating job:", error);
+            return false;
+        }
+    };
+
+    useEffect(() => {
+        const fetchJob = async () => {
+            try {
+                const res = await fetch(`/api/jobs/${id}`);
+                if (!res.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                const data = await res.json();
+
+                // Initialize form fields with fetched job data
+                setForm({ title: data.title, type: data.type, description: data.description, companyName: data.company.name, contactEmail: data.company.contactEmail, contactPhone: data.company.contactPhone, website: data.company.website, size: data.company.size, location: data.localtion, salary: data.salary, experienceLevel: data.experienceLevel, postedDate: Date.parse(data.postedDate), status: data.status, applicationDeadline: data.applicationDeadline, requirements: data.requirements })
+            } catch (error) {
+                console.error("Failed to fetch job:", error);
+                toast.error("Failed to fetch job");
+            }
+        };
+
+        fetchJob();
+    }, [id]);
+
+    const submitForm = async (e) => {
+        e.preventDefault();
+
+        const updatedJob = {
+            id,
             ...form,
             company: {
                 name: form.companyName,
@@ -14,55 +62,32 @@ const AddJobPage = () => {
                 contactPhone: form.contactPhone,
                 website: form.website,
                 size: form.size
-            }
+            },
+        };
+
+        const success = await updateJob(updatedJob);
+        if (success) {
+            toast.success("Job Updated Successfully");
+            navigate(`/jobs/${id}`);
+        } else {
+            toast.error("Failed to update the job");
         }
-
-        try {
-            const res = await fetch("/api/jobs", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(postData)
-            });
-
-            if (res.ok) {
-                console.log("Job added successfully!");
-                navigate("/")
-            } else {
-                console.error("POST FAILED!");
-
-            }
-        } catch (error) {
-            console.error("catch error:", error);
-        }
-    }
-
-    const submitForm = (e) => {
-        e.preventDefault();
-        addJob();
-        console.log("submitForm called");
-
-    };
-
-    const handleChange = (e) => {
-        const { id, value } = e.target;
-        setForm((prev) => ({ ...prev, [id]: value }));
     };
 
     return (
         <div className="create">
-            <h2>Add a New Job</h2>
+            <h2>Update Job</h2>
+
             <form onSubmit={submitForm}>
                 <label>Job title:</label>
                 <input
-                    id="title"
                     type="text"
                     required
-                    value={form.title}
+                    id="title" value={form.title}
                     onChange={handleChange}/>
                 <label>Job type:</label>
                 <select
-                    id="type"
-                    value={form.type}
+                    id="type" value={form.type}
                     onChange={handleChange}>
                     <option value="Full-Time">Full-Time</option>
                     <option value="Part-Time">Part-Time</option>
@@ -71,30 +96,26 @@ const AddJobPage = () => {
                 </select>
                 <label>Job Description:</label>
                 <textarea
-                    id="description"
                     required
-                    value={form.description}
+                    id="description" value={form.description}
                     onChange={handleChange}></textarea>
                 <label>Company Name:</label>
                 <input
-                    id="companyName"
                     type="text"
                     required
-                    value={form.companyName}
+                    id="companyName" value={form.companyName}
                     onChange={handleChange}/>
                 <label>Contact Email:</label>
                 <input
-                    id="contactEmail"
                     type="text"
                     required
-                    value={form.contactEmail}
+                    id="contactEmail" value={form.contactEmail}
                     onChange={handleChange}/>
                 <label>Contact Phone:</label>
                 <input
-                    id="contactPhone"
                     type="text"
                     required
-                    value={form.contactPhone}
+                    id="contactPhone" value={form.contactPhone}
                     onChange={handleChange}/>
                 <label>Website:</label>
                 <input
@@ -143,10 +164,10 @@ const AddJobPage = () => {
                     type="text"
                     id="requirements" value={form.requirements}
                     onChange={handleChange} />
-                <button>Add Job</button>
+                <button>Update Job</button>
             </form>
         </div>
     );
 };
 
-export default AddJobPage;
+export default EditJobPage;
