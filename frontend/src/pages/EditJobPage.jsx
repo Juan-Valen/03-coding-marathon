@@ -34,11 +34,9 @@ const EditJobPage = () => {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${JSON.parse(localStorage.getItem("user")).token}`
                 },
                 body: JSON.stringify(job),
-                headers: {
-                    Authorization: `Bearer ${JSON.parse(localStorage.getItem("user")).token}`
-                }
             });
             if (!res.ok) throw new Error("Failed to update job");
             return res.ok;
@@ -182,14 +180,14 @@ const EditJobPage = () => {
                     <label>applicationDeadline:</label>
                     <input
                         type="date"
-                        id="applicationDeadline" value={form.applicationDeadline}
+                        id="applicationDeadline" value={new Date(form.applicationDeadline).toISOString().split('T')[0]}
                         onChange={handleChange} />
                     <label>requirements:</label>
                     <div className="req-list">
                         {form.requirements.length === 0 && <p></p>}
                         {form.requirements.length !== 0 &&
                             form.requirements.map((reqt, index) =>
-                                <div className="req-item" key={"requirements " + reqt.index}>
+                                <div className="req-item" key={"requirements " + index}>
                                     <input name={index} type="text" required
                                         value={reqt}
                                         onChange={handleRequirement} />

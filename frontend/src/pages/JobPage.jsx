@@ -85,8 +85,12 @@ const JobPage = ({ isAuthenticated }) => {
                             job.requirements.map(req => req + "   ")}
                     </p>
                     <p>Description: {job.description}</p>
-                    <button onClick={() => onDeleteClick(job._id)}>delete</button>
-                    <button onClick={() => navigate(`/edit-job/${job._id}`)}>edit</button>
+                    {isAuthenticated &&
+                        <>
+                            <button onClick={() => onDeleteClick(job._id)}>delete</button>
+                            <button onClick={() => navigate(`/edit-job/${job._id}`)}>edit</button>
+                        </>
+                    }
 
                 </>
             )}
