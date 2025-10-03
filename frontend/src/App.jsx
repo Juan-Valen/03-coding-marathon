@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // pages & components
 import Home from "./pages/HomePage";
@@ -13,8 +13,24 @@ import JobPage from "./pages/JobPage";
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(
-        localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : false
+        !!localStorage.getItem("user")
     );
+
+    // Sync authentication state with localStorage changes
+    useEffect(() => { 
+        const checkAuth = () => {
+            const userExists = !!localStorage.getItem("user");
+            if (userExists !== isAuthenticated) {
+                setIsAuthenticated(userExists);
+            }
+        };
+        
+        // Check on mount and when storage changes
+        checkAuth();
+        window.addEventListener('storage', checkAuth);
+        
+        return () => window.removeEventListener('storage', checkAuth);
+    }, [isAuthenticated]);
 
     return (
         <div className="App">

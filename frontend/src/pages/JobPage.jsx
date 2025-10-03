@@ -80,11 +80,17 @@ const JobPage = ({ isAuthenticated }) => {
                     <p>Company: {job.company.name}</p>
                     <p>Salary: {job.salary}</p>
                     <p>Experience Level: {job.experienceLevel}</p>
-                    <p>Requirements:
-                        {job.requirements.length === 0 && <p></p>}
+                    <div>
+                        <p><strong>Requirements:</strong></p>
+                        {job.requirements.length === 0 && <p>No specific requirements listed</p>}
                         {job.requirements.length !== 0 &&
-                            job.requirements.map(req => req + "   ")}
-                    </p>
+                            <ul>
+                                {job.requirements.map((req, index) => (
+                                    <li key={index}>{req}</li>
+                                ))}
+                            </ul>
+                        }
+                    </div>
                     <p>Description: {job.description}</p>
                     {isAuthenticated &&
                         <>

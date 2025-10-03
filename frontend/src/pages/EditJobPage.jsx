@@ -82,7 +82,7 @@ const EditJobPage = () => {
                 website: form.website,
                 size: form.size
             },
-            applicationDeadline: form.applicationDeadline.toString()
+            applicationDeadline: form.applicationDeadline ? form.applicationDeadline.toString() : ""
         };
 
         const success = await updateJob(updatedJob);
@@ -181,7 +181,10 @@ const EditJobPage = () => {
                     <label>applicationDeadline:</label>
                     <input
                         type="date"
-                        id="applicationDeadline" value={new Date(form.applicationDeadline).toISOString().split('T')[0]}
+                        id="applicationDeadline" 
+                        value={form.applicationDeadline && !isNaN(new Date(form.applicationDeadline)) 
+                            ? new Date(form.applicationDeadline).toISOString().split('T')[0] 
+                            : ''}
                         onChange={handleChange} />
                     <label>requirements:</label>
                     <div className="req-list">
