@@ -19,7 +19,7 @@ const Signup = ({ setIsAuthenticated }) => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     await signup({
-      email: email.value,
+      username: email.value,
       password: password.value,
       name: name.value,
       phone_number: phoneNumber.value,
@@ -41,7 +41,7 @@ const Signup = ({ setIsAuthenticated }) => {
       <form onSubmit={handleFormSubmit}>
         <label>Name:</label>
         <input {...name} />
-        <label>Email address:</label>
+        <label>Username:</label>
         <input {...email} />
         <label>Password:</label>
         <input {...password} />

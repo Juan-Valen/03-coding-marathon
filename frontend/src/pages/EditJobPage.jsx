@@ -36,6 +36,9 @@ const EditJobPage = () => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(job),
+                headers: {
+                    Authorization: `Bearer ${JSON.parse(localStorage.getItem("user")).token}`
+                }
             });
             if (!res.ok) throw new Error("Failed to update job");
             return res.ok;

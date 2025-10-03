@@ -11,7 +11,7 @@ const Login = ({ setIsAuthenticated }) => {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        await login({ email: email.value, password: password.value });
+        await login({ username: email.value, password: password.value });
         if (!error) {
             console.log("success");
             navigate("/");
@@ -22,7 +22,7 @@ const Login = ({ setIsAuthenticated }) => {
         <div className="create">
             <h2>Login</h2>
             <form onSubmit={handleFormSubmit}>
-                <label>Email:</label>
+                <label>Username:</label>
                 <input {...email} />
                 <label>Password:</label>
                 <input {...password} />
